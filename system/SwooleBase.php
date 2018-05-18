@@ -1,9 +1,11 @@
 <?php
+namespace system;
+
 class SwooleBase {
     
     protected static $conifg = [];
     
-    public function __construct(){
+    private function __construct(){
         define('ROOT_PATH', dirname(dirname(__FILE__)));
         $this->setConfig();
     }

@@ -1,4 +1,7 @@
 <?php
+
+namespace appliaction\controller;
+
 class Index extends Base {
 	
 	public function init(){

@@ -1,4 +1,6 @@
 <?php
+namespace appliaction\controller;
+
 class Base {
 	
 	protected $request;
@@ -6,7 +8,7 @@ class Base {
 	protected static $config = [];
 	protected static $mysqlPool = null;
 	
-	public function __construct(swoole_http_response $response, $mysqlPool = null){
+	public function __construct(\swoole_http_response $response, $mysqlPool = null){
 	    $this->setResponse($response);
 	    self::$mysqlPool = $mysqlPool;
 	}

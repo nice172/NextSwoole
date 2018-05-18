@@ -1,4 +1,5 @@
 <?php
+namespace system;
 
 class Request {
     
@@ -11,7 +12,7 @@ class Request {
     private $files = null;
     private $rawContent = null;
     
-    public function __construct(swoole_http_request $request){
+    public function __construct(\swoole_http_request $request){
         $this->request = $request;
     }
     
