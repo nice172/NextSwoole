@@ -3,8 +3,6 @@ namespace system;
 
 require_once 'Loader.php';
 require_once 'SwooleBase.php';
-require_once 'Request.php';
-require_once 'Db.php';
 
 //创建一个异步非阻塞的http服务器
 //查看进程命令： ps aux | grep my_swoole_http
@@ -21,6 +19,7 @@ class HttpServer extends SwooleBase {
     private $mysqlPool = [];
     private $objectPool = [];
     private $redisPool = [];
+    private $fileStatus = true;
     /**
      * * onStart * onShutdown * onWorkerStart * onWorkerStop * onTimer * onConnect * onReceive
      * * onClose * onTask * onFinish * onPipeMessage * onWorkerError * onManagerStart
@@ -65,11 +64,12 @@ class HttpServer extends SwooleBase {
     private function onWorkerStart(){
         $this->server->on('WorkerStart', function(\swoole_http_server $server, $worker_id){
             swoole_set_process_name('nextSwoole_worker');
-            spl_autoload_register('\system\Loader::autoload');
         });
     }
     
     private function init(){
+        \system\Loader::addNamespace();
+        spl_autoload_register('\system\Loader::autoload');
         $this->mysqlPool = Db::getInstance();
     }
     
@@ -100,16 +100,22 @@ class HttpServer extends SwooleBase {
                $controllerInstance = $this->objectPool[$controllerName];
                $controllerInstance->setResponse($response);
            }else{
-               \system\Loader::bindModule('home');
+               \system\Loader::bindModule($controller['moduleName']);
                \system\Loader::addNamespace();
-               $controllerInstance = new $controllerName($response,$this->mysqlPool::$MySqlPool);
-               $this->objectPool[$controllerName] = $controllerInstance;
+               $this->fileStatus = file_exists(ROOT_PATH.str_replace('\\', '/', $controllerName).'.php');
+               if ($this->fileStatus == true){
+                   $controllerInstance = new $controllerName($response,$this->mysqlPool::$MySqlPool);
+                   $this->objectPool[$controllerName] = $controllerInstance;
+               }
            }
-           $methodName = $controller['methodName'];
-           if (method_exists($controllerInstance, $methodName)){
-               $controllerInstance->$methodName();
-               return;
+           if ($this->fileStatus == true){
+               $methodName = $controller['methodName'];
+               if (method_exists($controllerInstance, $methodName)){
+                   $controllerInstance->$methodName();
+                   return;
+               }
            }
+           $this->fileStatus = true;
            $response->status(404);
            $response->end('<h2>404 NOT FOUND...</h2>');
         });

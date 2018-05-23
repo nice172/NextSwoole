@@ -4,12 +4,13 @@ namespace system;
 class Config{
     
     private static $instance = null;
+    private static $config = [];
     
     private function __construct(){
         $paths = scandir(ROOT_PATH.'/config');
         foreach ($paths as $file){
             if ($file != '.' && $file != '..'){
-                self::getConfig(require_once ROOT_PATH.'/config/'.$file);
+                self::getConfig(require ROOT_PATH.'/config/'.$file);
             }
         }
     }
@@ -30,16 +31,15 @@ class Config{
      * @return string|string[]|array
      */
     public function getConfig($name='',$value=''){
-        static $config = [];
         if (is_array($name) && $value == ''){
-            $config = array_merge($config,array_change_key_case($name,CASE_UPPER));
+            self::$config = array_merge(self::$config,array_change_key_case($name,CASE_UPPER));
         }elseif (is_string($name) && $value != ''){
-            $config[strtoupper($name)] = $value;
+            self::$config[strtoupper($name)] = $value;
         }elseif ($name != ''){
             $name = strtoupper($name);
-            return isset($config[$name]) ? $config[$name] : '';
+            return isset(self::$config[$name]) ? self::$config[$name] : '';
         }else{
-            return $config;
+            return self::$config;
         }
     }
     

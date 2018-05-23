@@ -7,8 +7,8 @@ class Db {
     
     public static $MySqlPool = [];
     
-    private function __construct(){
-        $this->connect();
+    private function __construct($linkId=null){
+        $this->connect($linkId);
     }
     
     private function __clone(){}
@@ -21,7 +21,7 @@ class Db {
         return self::$instance;
     }
     
-    private function connect($linkId=null){
+    public function connect($linkId=null){
         $mysqli = mysqli_connect('localhost','root','123456','weili');
         if (mysqli_connect_error()){
             return false;

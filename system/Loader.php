@@ -17,11 +17,11 @@ class Loader {
     }
     
     /**
-     * 添加命名空间
+     * 添加命名空间基础目录
      */
     public static function addNamespace(Array $namespace = []){
         self::$vendorMap = [
-            'app' => ROOT_PATH.DIRECTORY_SEPARATOR.'application'.DIRECTORY_SEPARATOR.self::$moduleName,
+            'application' => ROOT_PATH.DIRECTORY_SEPARATOR.'application',
             'system' => ROOT_PATH.DIRECTORY_SEPARATOR.'system'
         ];
         if (!empty($namespace)){
@@ -32,9 +32,10 @@ class Loader {
     /**
      * 自动加载器
      */
-    public static function autoload($class){
-        $file = self::findFile($class);
+    public static function autoload($className){
+        $file = self::findFile($className);
         if (file_exists($file)) {
+            echo $file."\n";
             self::includeFile($file);
         }
     }
@@ -42,11 +43,12 @@ class Loader {
     /**
      * 解析文件路径
      */
-    private static function findFile($class){
-        $vendor = substr($class, 0, strpos($class, '\\')); // 顶级命名空间
-        $vendorDir = self::$vendorMap[$vendor]; // 文件基目录
-        $filePath = substr($class, strlen($vendor)) . '.php'; // 文件相对路径
-        return str_replace('\\', '/', strtr($vendorDir . $filePath, '\\', DIRECTORY_SEPARATOR)); // 文件标准路径
+    public static function findFile($className){
+        $namespace = substr($className, 0, strpos($className, '\\')); // 顶级命名空间
+        $namespacePath = self::$vendorMap[$namespace]; // 文件基目录
+        $className = str_replace('\\', DIRECTORY_SEPARATOR, $className);
+        $filePath = substr($className, strlen($namespace)).'.php'; // 文件相对路径
+        return str_replace('\\', DIRECTORY_SEPARATOR, $namespacePath.$filePath); // 文件标准路径
     }
     
     /**
@@ -54,7 +56,7 @@ class Loader {
      */
     private static function includeFile($file){
         if (is_file($file)) {
-            include_once $file;
+            return include_once $file;
         }
     }
     
