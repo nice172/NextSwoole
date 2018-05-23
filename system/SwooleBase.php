@@ -5,7 +5,7 @@ class SwooleBase {
     
     protected static $conifg = [];
     
-    private function __construct(){
+    protected function __construct(){
         define('ROOT_PATH', dirname(dirname(__FILE__)));
         $this->setConfig();
     }

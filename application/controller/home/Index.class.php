@@ -1,6 +1,6 @@
 <?php
 
-namespace appliaction\controller;
+namespace appliaction\home\controller;
 
 class Index extends Base {
 	

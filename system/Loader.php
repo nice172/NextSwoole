@@ -4,10 +4,30 @@ namespace system;
 class Loader {
     
     //路径映射
-    public static $vendorMap = array(
-        'app' => ROOT_PATH.DIRECTORY_SEPARATOR.'application',
-        'system' => ROOT_PATH.DIRECTORY_SEPARATOR.'system'
-    );
+    private static $vendorMap = [];
+    
+    private static $moduleName = '';
+    
+    /**
+     * 绑定模块
+     * @param string $module
+     */
+    public static function bindModule($module){
+        self::$moduleName = $module;
+    }
+    
+    /**
+     * 添加命名空间
+     */
+    public static function addNamespace(Array $namespace = []){
+        self::$vendorMap = [
+            'app' => ROOT_PATH.DIRECTORY_SEPARATOR.'application'.DIRECTORY_SEPARATOR.self::$moduleName,
+            'system' => ROOT_PATH.DIRECTORY_SEPARATOR.'system'
+        ];
+        if (!empty($namespace)){
+            self::$vendorMap = array_merge(self::$vendorMap,$namespace);
+        }
+    }
     
     /**
      * 自动加载器
@@ -34,10 +54,10 @@ class Loader {
      */
     private static function includeFile($file){
         if (is_file($file)) {
-            include $file;
+            include_once $file;
         }
     }
     
 }
 
-spl_autoload_register('\system\Loader::autoload'); // 注册自动加载
+//spl_autoload_register('\system\Loader::autoload'); // 注册自动加载

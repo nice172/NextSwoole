@@ -1,6 +1,7 @@
 <?php
 namespace system;
 
+require_once 'Loader.php';
 require_once 'SwooleBase.php';
 require_once 'Request.php';
 require_once 'Db.php';
@@ -25,7 +26,7 @@ class HttpServer extends SwooleBase {
      * * onClose * onTask * onFinish * onPipeMessage * onWorkerError * onManagerStart
      * * onManagerStop WebSocket * onOpen * onHandshake * onMessage
      */
-    private function __construct(){
+    protected function __construct(){
         parent::__construct();
         $this->server = new \swoole_http_server(self::$conifg['server']['host'], self::$conifg['server']['port']);
         $this->setServerConfig();
@@ -64,12 +65,7 @@ class HttpServer extends SwooleBase {
     private function onWorkerStart(){
         $this->server->on('WorkerStart', function(\swoole_http_server $server, $worker_id){
             swoole_set_process_name('nextSwoole_worker');
-            spl_autoload_register(function($className){
-                $file = ROOT_PATH.'/application/'.$className.'.class.php';
-                if (file_exists($file)){
-                    require_once $file;
-                }
-            });
+            spl_autoload_register('\system\Loader::autoload');
         });
     }
     
@@ -91,6 +87,7 @@ class HttpServer extends SwooleBase {
     
     private function onWorkerError(){}
     
+    // http://localhost.com/home/index
     private function onRequest(){
         $this->server->on('request', function(\swoole_http_request $request, \swoole_http_response $response){
            if ($request->server['path_info'] == '/favicon.ico') {
@@ -103,6 +100,8 @@ class HttpServer extends SwooleBase {
                $controllerInstance = $this->objectPool[$controllerName];
                $controllerInstance->setResponse($response);
            }else{
+               \system\Loader::bindModule('home');
+               \system\Loader::addNamespace();
                $controllerInstance = new $controllerName($response,$this->mysqlPool::$MySqlPool);
                $this->objectPool[$controllerName] = $controllerInstance;
            }

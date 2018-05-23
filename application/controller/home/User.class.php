@@ -1,5 +1,5 @@
 <?php
-namespace appliaction\controller;
+namespace appliaction\home\controller;
 
 class User extends Base {
 	

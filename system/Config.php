@@ -6,13 +6,22 @@ class Config{
     private static $instance = null;
     
     private function __construct(){
+        $paths = scandir(ROOT_PATH.'/config');
+        foreach ($paths as $file){
+            if ($file != '.' && $file != '..'){
+                self::getConfig(require_once ROOT_PATH.'/config/'.$file);
+            }
+        }
+    }
+    
+    private function __clone(){}
+ 
+    public static function getInstance(){
         if (!(self::$instance instanceof self)){
             self::$instance = new self();
         }
         return self::$instance;
     }
-    
-    private function __clone(){}
     
     /**
      * 获取配置参数

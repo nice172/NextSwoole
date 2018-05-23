@@ -16,18 +16,38 @@ class Request {
         $this->request = $request;
     }
     
+    /**
+     * 解析URL路由
+     * http://www.example.com/home/index/init
+     * @return array
+     */
     public function parseRoute(){
-        $pathname = explode('/', $this->request->server['path_info']);
+        $pathinfo = explode('/', substr($this->request->server['path_info'], 1));
         $extension = pathinfo($this->request->server['path_info']);
-        $controller = 'Index';
-        $method = 'init';
-        if (!isset($extension['extension'])){
-            if (isset($pathname[1]) && !empty($pathname[1])){
-                $controller = ucfirst($pathname[1]);
-                $method = isset($pathname[2]) && !empty($pathname[2]) ? trim($pathname[2]) : 'init';
-            }
+        $default_module = Config::getInstance()->getConfig('default_module');
+        $default_controller = ucfirst(Config::getInstance()->getConfig('default_controller'));
+        $controllerName = '\appliaction\\'.$default_module.'\controller\\'.$default_controller;
+        $methodName = 'init';
+        if (isset($extension['extension'])){
+            return ['moduleName' => $default_module,
+                'controllerName' => $controllerName, 'methodName' => $methodName];
         }
-        return ['controllerName' => $controller, 'methodName' => $method];
+        $moduleName = trim($pathinfo[0]);
+        if (count($pathinfo) >= 3){
+            if (isset($pathinfo[1]) && !empty($pathinfo[1])){
+                $controllerName = '\appliaction\\'.$default_module.'\controller\\'.ucfirst($pathinfo[1]);
+            }
+            if (isset($pathinfo[2]) && !empty($pathinfo[2])){
+                $methodName = $pathinfo[1];
+            }
+        }else{
+            
+        }
+        if (!isset($moduleName) || $moduleName == ''){
+            $moduleName = Config::getInstance()->getConfig('default_module');
+        }
+
+        return ['moduleName' => $moduleName,'controllerName' => $controllerName, 'methodName' => $methodName];
     }
     
 }
