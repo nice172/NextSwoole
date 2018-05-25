@@ -33,12 +33,12 @@ class Config{
     public function getConfig($name='',$value=''){
         if (is_array($name) && $value == ''){
             self::$config = array_merge(self::$config,array_change_key_case($name,CASE_UPPER));
-        }elseif (is_string($name) && $value != ''){
+        }elseif (is_string($name) && $name != '' && $value != ''){
             self::$config[strtoupper($name)] = $value;
         }elseif ($name != ''){
             $name = strtoupper($name);
             return isset(self::$config[$name]) ? self::$config[$name] : '';
-        }else{
+        }elseif (empty($name) && empty($value)){
             return self::$config;
         }
     }

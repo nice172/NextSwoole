@@ -16,7 +16,7 @@ class HttpServer extends SwooleBase {
     
     private $server = null;
     private static $instance = null;
-    private $mysqlPool = [];
+    private $mysqlPool = null;
     private $objectPool = [];
     private $redisPool = [];
     private $fileStatus = true;
@@ -70,7 +70,12 @@ class HttpServer extends SwooleBase {
     private function init(){
         \system\Loader::addNamespace();
         spl_autoload_register('\system\Loader::autoload');
-        $this->mysqlPool = Db::getInstance();
+        $this->mysqlPool = new \SplQueue();
+        if ($this->mysqlPool->count() <= 0){
+            for ($i=0; $i < self::$conifg['server']['server_num']; $i++){
+                $this->mysqlPool->enqueue(Db::getInstance());
+            }
+        }
     }
     
     private function onWorkerStop(){
@@ -104,13 +109,15 @@ class HttpServer extends SwooleBase {
                \system\Loader::addNamespace();
                $this->fileStatus = file_exists(ROOT_PATH.str_replace('\\', '/', $controllerName).'.php');
                if ($this->fileStatus == true){
-                   $controllerInstance = new $controllerName($response,$this->mysqlPool::$MySqlPool);
+                   $controllerInstance = new $controllerName($response);
                    $this->objectPool[$controllerName] = $controllerInstance;
                }
            }
            if ($this->fileStatus == true){
                $methodName = $controller['methodName'];
                if (method_exists($controllerInstance, $methodName)){
+                   
+                   $controllerInstance->setMysqlPool($mysql);
                    $controllerInstance->$methodName();
                    return;
                }

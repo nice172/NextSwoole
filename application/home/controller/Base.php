@@ -22,6 +22,10 @@ class Base {
 	    $this->response->header('Content-Type', 'text/html;charset=utf-8');
 	}
 	
+	public function setMysqlPool($mysql){
+	    self::$mysqlPool = $mysql;
+	}
+	
 	public function setConfig($config=[]){
 	    self::$config = array_map(self::$config, $config);
 	}
