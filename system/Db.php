@@ -58,8 +58,8 @@ class Db
      * @return Connection
      * @throws Exception
      */
-    public static function connect($config = [], $name = false)
-    {
+    public static function connect($config = [], $name = false){
+
         if (false === $name) {
             $name = md5(serialize($config));
         }
@@ -85,7 +85,7 @@ class Db
 
             self::$instance[$name] = new $class($options);
         }
-
+        
         return self::$instance[$name];
     }
 
@@ -161,8 +161,7 @@ class Db
      * @param  array  $params 参数
      * @return mixed
      */
-    public static function __callStatic($method, $params)
-    {
+    public static function __callStatic($method, $params){
         return call_user_func_array([self::connect(), $method], $params);
     }
 }

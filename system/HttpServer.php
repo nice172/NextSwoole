@@ -57,13 +57,13 @@ class HttpServer extends SwooleBase {
     private function onStart(){
         $this->server->on('start', function($server){
             //设置进程名称
-            swoole_set_process_name('nextSwoole_master');
+            swoole_set_process_name('ns_master');
         });
     }
     
     private function onWorkerStart(){
         $this->server->on('WorkerStart', function(\swoole_http_server $server, $worker_id){
-            swoole_set_process_name('nextSwoole_worker');
+            swoole_set_process_name('ns_worker');
         });
     }
     
@@ -87,7 +87,7 @@ class HttpServer extends SwooleBase {
     
     private function onManagerStart(){
         $this->server->on('ManagerStart', function(){
-            swoole_set_process_name('nextSwoole_manager');
+            swoole_set_process_name('ns_manager');
         });
     }
     
@@ -146,6 +146,24 @@ class HttpServer extends SwooleBase {
         });
     }
     
+    // 欢迎信息
+    private function welcome(){
+    	$swooleVersion = swoole_version();
+    	$phpVersion = PHP_VERSION;
+    	self::send("NextSwoole");
+    	self::send('Server    Name: NS-Http');
+    	self::send("PHP    Version: {$phpVersion}");
+    	self::send("Swoole Version: {$swooleVersion}");
+    	self::send("Listen Address: ".self::$conifg['server']['host']);
+    	self::send("Listen    Port: ".self::$conifg['server']['port']);
+    }
+    
+    // 发送至屏幕
+    private static function send($msg){
+    	$time = date('Y-m-d H:i:s');
+    	echo "[{$time}] " . $msg . PHP_EOL;
+    }
+    
     private function onClose(){}
     
     private function onPipeMessage(){}
@@ -164,6 +182,7 @@ class HttpServer extends SwooleBase {
     
     public function run($config){
         self::$conifg = array_merge(self::$conifg,$config);
+        $this->welcome();
         $this->server->start();
     }
     

@@ -246,8 +246,7 @@ abstract class Connection
      * @return PDO
      * @throws Exception
      */
-    public function connect(array $config = [], $linkNum = 0, $autoConnection = false)
-    {
+    public function connect(array $config = [], $linkNum = 0, $autoConnection = false){
         if (!isset($this->links[$linkNum])) {
             if (!$config) {
                 $config = $this->config;
@@ -288,6 +287,7 @@ abstract class Connection
                 }
             }
         }
+        
         return $this->links[$linkNum];
     }
 

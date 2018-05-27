@@ -11,11 +11,18 @@ class Base {
 	public function __construct(\swoole_http_response $response, $mysqlPool = null){
 	    $this->setResponse($response);
 	    self::$mysqlPool = $mysqlPool;
+	    if (method_exists($this, '_initialize')){
+	    	$this->_initialize();
+	    }
 	}
+
+	protected function _initialize(){}
 	
 	public function init(){
 		$this->response->end('easyswoole');
 	}
+	
+	
 	
 	public function setResponse($response){
 	    $this->response = $response;
