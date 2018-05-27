@@ -71,11 +71,12 @@ class HttpServer extends SwooleBase {
         \system\Loader::addNamespace();
         spl_autoload_register('\system\Loader::autoload');
         $this->mysqlPool = new \SplQueue();
-        if ($this->mysqlPool->count() <= 0){
-            for ($i=0; $i < self::$conifg['server']['server_num']; $i++){
-                $this->mysqlPool->enqueue(Db::getInstance());
-            }
-        }
+        //if ($this->mysqlPool->count() <= 0){
+        //    for ($i=0; $i < self::$conifg['server']['server_num']; $i++){
+        //        $this->mysqlPool->enqueue(Db::getInstance());
+        //    }
+        //}
+        define('APP_DEBUG', true);
     }
     
     private function onWorkerStop(){
@@ -116,8 +117,7 @@ class HttpServer extends SwooleBase {
            if ($this->fileStatus == true){
                $methodName = $controller['methodName'];
                if (method_exists($controllerInstance, $methodName)){
-                   
-                   $controllerInstance->setMysqlPool($mysql);
+                   $controllerInstance->setMysqlPool($mysql=[]);
                    $controllerInstance->$methodName();
                    return;
                }

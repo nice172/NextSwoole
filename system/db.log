@@ -1,0 +1,32 @@
+[ DB ] INIT mysql
+
+[ DB ] CONNECT:[ UseTime:0.001925s ] mysql:host=127.0.0.1;dbname=weili_shenzhen;charset=utf8
+
+[ SQL ] SHOW COLUMNS FROM `wl_wx_users` [ RunTime:0.000047s ]
+
+[ SQL ] SELECT * FROM `wl_wx_users` WHERE  `id` = 10 LIMIT 1 [ RunTime:0.000028s ]
+
+[ DB ] INIT mysql
+
+[ DB ] CONNECT:[ UseTime:0.010853s ] mysql:host=127.0.0.1;dbname=weili_shenzhen;charset=utf8
+
+[ SQL ] SHOW COLUMNS FROM `wl_wx_users` [ RunTime:0.00003s ]
+
+[ SQL ] SELECT * FROM `wl_wx_users` WHERE  `id` = 10 LIMIT 1 [ RunTime:0.00005s ]
+
+[ DB ] INIT mysql
+
+[ DB ] CONNECT:[ UseTime:0.001771s ] mysql:host=127.0.0.1;dbname=weili_shenzhen;charset=utf8
+
+[ SQL ] SHOW COLUMNS FROM `wl_wx_users` [ RunTime:0.00003s ]
+
+[ SQL ] SELECT * FROM `wl_wx_users` WHERE  `id` = 10 LIMIT 1 [ RunTime:0.00003s ]
+
+[ DB ] INIT mysql
+
+[ DB ] CONNECT:[ UseTime:0.010405s ] mysql:host=127.0.0.1;dbname=weili_shenzhen;charset=utf8
+
+[ SQL ] SHOW COLUMNS FROM `wl_wx_users` [ RunTime:0.000030s ]
+
+[ SQL ] SELECT * FROM `wl_wx_users` WHERE  `id` = 10 LIMIT 1 [ RunTime:0.000025s ]
+
