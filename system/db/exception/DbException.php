@@ -1,5 +1,7 @@
 <?php
 namespace system\db\exception;
+use system\db\MException;
+
 /**
  * Database相关异常处理类
  */

@@ -1,8 +1,8 @@
 <?php
-namespace system\db;
-use Exception;
-class MException extends Exception
-{
+
+namespace system;
+
+class ExceptionBase extends \Exception {
     /**
      * @var array 保存异常页面显示的额外 Debug 数据
      */

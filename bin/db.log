@@ -27682,3 +27682,65 @@
 
 [ SQL ] SELECT * FROM `wl_wx_users` WHERE  `id` = 13 LIMIT 1 [ RunTime:0.000020s ]
 
+[ SQL ] SELECT * FROM `wl_wx_users` WHERE  `id` = 10 LIMIT 1 [ RunTime:0.000190s ]
+
+[ DB ] INIT mysql
+
+[ DB ] CONNECT:[ UseTime:0.025159s ] mysql:host=127.0.0.1;dbname=weili_shenzhen;charset=utf8
+
+[ SQL ] SHOW COLUMNS FROM `wl_wx_users` [ RunTime:0.000014s ]
+
+[ SQL ] SELECT * FROM `wl_wx_users` WHERE  `id` = 10 LIMIT 1 [ RunTime:0.000049s ]
+
+[ SQL ] SELECT * FROM `wl_wx_users` WHERE  `id` = 7 LIMIT 1 [ RunTime:0.000055s ]
+
+[ SQL ] SELECT * FROM `wl_wx_users` WHERE  `id` = 9 LIMIT 1 [ RunTime:0.000021s ]
+
+[ SQL ] SELECT * FROM `wl_wx_users` WHERE  `id` = 6 LIMIT 1 [ RunTime:0.000018s ]
+
+[ SQL ] SELECT * FROM `wl_wx_users` WHERE  `id` = 8 LIMIT 1 [ RunTime:0.000020s ]
+
+[ SQL ] SELECT * FROM `wl_wx_users` WHERE  `id` = 10 LIMIT 1 [ RunTime:0.000028s ]
+
+[ SQL ] SELECT * FROM `wl_wx_users` WHERE  `id` = 8 LIMIT 1 [ RunTime:0.000024s ]
+
+[ SQL ] SELECT * FROM `wl_wx_users` WHERE  `id` = 5 LIMIT 1 [ RunTime:0.000023s ]
+
+[ SQL ] SELECT * FROM `wl_wx_users` WHERE  `id` = 12 LIMIT 1 [ RunTime:0.000029s ]
+
+[ DB ] INIT mysql
+
+[ DB ] CONNECT:[ UseTime:0.003089s ] mysql:host=127.0.0.1;dbname=weili_shenzhen;charset=utf8
+
+[ SQL ] SHOW COLUMNS FROM `wl_wx_users` [ RunTime:0.000017s ]
+
+[ SQL ] SELECT * FROM `wl_wx_users` WHERE  `id` = 6 LIMIT 1 [ RunTime:0.000042s ]
+
+[ DB ] INIT mysql
+
+[ DB ] CONNECT:[ UseTime:0.002111s ] mysql:host=127.0.0.1;dbname=weili_shenzhen;charset=utf8
+
+[ SQL ] SHOW COLUMNS FROM `wl_wx_users` [ RunTime:0.000012s ]
+
+[ SQL ] SELECT * FROM `wl_wx_users` WHERE  `id` = 7 LIMIT 1 [ RunTime:0.000034s ]
+
+[ SQL ] SELECT * FROM `wl_wx_users` WHERE  `id` = 9 LIMIT 1 [ RunTime:0.000021s ]
+
+[ DB ] INIT mysql
+
+[ DB ] CONNECT:[ UseTime:0.002808s ] mysql:host=127.0.0.1;dbname=weili_shenzhen;charset=utf8
+
+[ SQL ] SHOW COLUMNS FROM `wl_wx_users` [ RunTime:0.000016s ]
+
+[ SQL ] SELECT * FROM `wl_wx_users` WHERE  `id` = 5 LIMIT 1 [ RunTime:0.000034s ]
+
+[ DB ] INIT mysql
+
+[ DB ] INIT mysql
+
+[ DB ] CONNECT:[ UseTime:0.001245s ] mysql:host=127.0.0.1;dbname=weili_shenzhen;charset=utf8
+
+[ SQL ] SHOW COLUMNS FROM `wl_wx_users` [ RunTime:0.000012s ]
+
+[ SQL ] SELECT * FROM `wl_wx_users` WHERE  `id` = 12 LIMIT 1 [ RunTime:0.000032s ]
+

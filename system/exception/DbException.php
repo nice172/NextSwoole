@@ -1,22 +1,14 @@
 <?php
-// +----------------------------------------------------------------------
-// | ThinkPHP [ WE CAN DO IT JUST THINK ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2006~2018 http://thinkphp.cn All rights reserved.
-// +----------------------------------------------------------------------
-// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
-// +----------------------------------------------------------------------
-// | Author: 麦当苗儿 <zuojiazi@vip.qq.com> <http://zjzit.cn>
-// +----------------------------------------------------------------------
 
-namespace think\exception;
+namespace system\exception;
 
-use think\Exception;
+
+use system\ExceptionBase;
 
 /**
  * Database相关异常处理类
  */
-class DbException extends Exception
+class DbException extends ExceptionBase
 {
     /**
      * DbException constructor.

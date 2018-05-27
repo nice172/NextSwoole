@@ -14,7 +14,7 @@ class MPDOException extends DbException
      * @param string        $sql
      * @param int           $code
      */
-    public function __construct(PDOException $exception, array $config, $sql, $code = 10501)
+    public function __construct(\PDOException $exception, array $config, $sql, $code = 10501)
     {
         $error = $exception->errorInfo;
 
