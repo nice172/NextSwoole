@@ -1,9 +1,11 @@
 <?php
+
 namespace application\home\controller;
 
 class User extends Base {
 	
 	public function init(){
+			
 		
 		
 		

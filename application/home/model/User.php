@@ -4,10 +4,10 @@ use system\Model;
 
 class User extends Model{
 	
-	public function __construct(){
-		
+	protected $table = 'wl_wx_users';
+	
+	public function wx_userlist(){
+		return $this->where(['id' => 10])->find();
 	}
-	
-	
 	
 }
