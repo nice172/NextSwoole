@@ -7,6 +7,7 @@ class SwooleBase {
     
     protected function __construct(){
         define('ROOT_PATH', dirname(dirname(__FILE__)));
+        date_default_timezone_set('PRC');
         $this->setConfig();
     }
     

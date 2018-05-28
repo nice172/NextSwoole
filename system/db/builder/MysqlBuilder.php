@@ -1,5 +1,6 @@
 <?php
 namespace system\db\builder;
+use Exception;
 use system\db\AdapterBuilder;
 
 /**

@@ -1,6 +1,11 @@
 <?php
 namespace system\model\relation;
-class HasMany extends Relation
+
+use system\Loader;
+use system\Model;
+use system\model\BaseRelation;
+
+class HasMany extends BaseRelation
 {
     /**
      * 构造函数
@@ -23,7 +28,7 @@ class HasMany extends Relation
      * 延迟获取关联数据
      * @param string   $subRelation 子关联名
      * @param \Closure $closure     闭包查询条件
-     * @return false|\PDOStatement|string|\think\Collection
+     * @return false|\PDOStatement|string|\system\Collection
      */
     public function getRelation($subRelation = '', $closure = null)
     {

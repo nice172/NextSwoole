@@ -2,6 +2,8 @@
 
 namespace system\model;
 
+use system\BaseCollection;
+
 class ModelCollection extends BaseCollection
 {
     /**

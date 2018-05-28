@@ -4,10 +4,11 @@ use system\Model;
 
 class User extends Model{
 	
-	protected $table = 'wl_wx_users';
+	protected $table = 'wl_cosp_goods_info';
 	
 	public function wx_userlist(){
-		return $this->where(['id' => rand(3,13)])->find();
+	    $id = rand(1,62);
+		return $this->where(['id' => $id])->find();
 	}
 	
 }

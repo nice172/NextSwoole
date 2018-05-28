@@ -2,7 +2,7 @@
 
 namespace system;
 
-class BaseCollection implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
+class BaseCollection implements \ArrayAccess, \Countable, \IteratorAggregate, \JsonSerializable
 {
     /**
      * @var array 数据
@@ -395,7 +395,7 @@ class BaseCollection implements ArrayAccess, Countable, IteratorAggregate, JsonS
      */
     public function getIterator()
     {
-        return new ArrayIterator($this->items);
+        return new \ArrayIterator($this->items);
     }
 
     /**

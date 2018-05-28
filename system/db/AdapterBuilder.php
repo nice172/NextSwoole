@@ -1,6 +1,7 @@
 <?php
 namespace system\db;
 use Exception;
+use PDO;
 use system\db\Expression;
 
 abstract class AdapterBuilder

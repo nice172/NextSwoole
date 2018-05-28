@@ -7,6 +7,8 @@ return [
     'default_controller' => 'Index', // 默认控制器
     'default_method' => 'init', // 默认方法
     'app_debug' => true,
+    'runtime_path' => '/runtime',
+    'log_path' => '/runtime/log',
     // 数据库配置
 	'database' => [
 		// 数据库类型

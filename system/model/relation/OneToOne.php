@@ -1,11 +1,15 @@
 <?php
 namespace system\model\relation;
+
+use system\Loader;
+use system\Model;
+use system\db\Query;
+use system\model\BaseRelation;
 /**
  * Class OneToOne
- * @package think\model\relation
  *
  */
-abstract class OneToOne extends Relation
+abstract class OneToOne extends BaseRelation
 {
     // 预载入方式 0 -JOIN 1 -IN
     protected $eagerlyType = 1;
@@ -267,7 +271,7 @@ abstract class OneToOne extends Relation
         foreach ($bindAttr as $key => $attr) {
             $key = is_numeric($key) ? $attr : $key;
             if (isset($result->$key)) {
-                throw new Exception('bind attr has exists:' . $key);
+                throw new \Exception('bind attr has exists:' . $key);
             } else {
                 $result->setAttr($key, $model ? $model->$attr : null);
             }

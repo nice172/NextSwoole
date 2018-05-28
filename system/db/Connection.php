@@ -2,11 +2,13 @@
 namespace system\db;
 use system\Db;
 use PDO;
+use system\db\exception\BindParamException;
 use system\db\exception\MPDOException;
 use PDOException;
+use system\Log;
 /**
  * Class Connection
- * @package think
+ * @package system
  * @method Query table(string $table) 指定数据表（含前缀）
  * @method Query name(string $name) 指定数据表（不含前缀）
  *
@@ -33,6 +35,7 @@ abstract class Connection
     protected $linkID;
     protected $linkRead;
     protected $linkWrite;
+    protected $reconnect = false; //是否需要断线重连
 
     // 查询结果类型
     protected $fetchType = PDO::FETCH_ASSOC;
@@ -242,12 +245,12 @@ abstract class Connection
      * @access public
      * @param array         $config 连接参数
      * @param integer       $linkNum 连接序号
-     * @param array|bool    $autoConnection 是否自动连接主数据库（用于分布式）
+     * @param array|bool    $autoConnectionMaster 是否自动连接主数据库（用于分布式）
      * @return PDO
      * @throws Exception
      */
-    public function connect(array $config = [], $linkNum = 0, $autoConnection = false){
-        if (!isset($this->links[$linkNum])) {
+    public function connect(array $config = [], $linkNum = 0, $autoConnectionMaster = false){
+        if (!isset($this->links[$linkNum]) || $this->reconnect == true) {
             if (!$config) {
                 $config = $this->config;
             } else {
@@ -276,18 +279,18 @@ abstract class Connection
                 $this->links[$linkNum] = new PDO($config['dsn'], $config['username'], $config['password'], $params);
                 if ($config['debug']) {
                     // 记录数据库连接信息
-                    file_put_contents('db.log','[ DB ] CONNECT:[ UseTime:' . number_format(microtime(true) - $startTime, 6) . 's ] ' . $config['dsn']."\n\n",FILE_APPEND);
+                    Log::record('[ DB ] CONNECT:[ UseTime:' . number_format(microtime(true) - $startTime, 6) . 's ] ' . $config['dsn']);
                 }
             } catch (PDOException $e) {
-                if ($autoConnection) {
-                    file_put_contents('db.log',$e->getMessage()."\n\n",FILE_APPEND);
-                    return $this->connect($autoConnection, $linkNum);
+                if ($autoConnectionMaster) {
+                    Log::record($e->getMessage());
+                    return $this->connect($autoConnectionMaster, $linkNum);
                 } else {
                     throw $e;
                 }
             }
         }
-        
+        $this->reconnect = false;
         return $this->links[$linkNum];
     }
 
@@ -325,13 +328,11 @@ abstract class Connection
      * @throws PDOException
      * @throws \Exception
      */
-    public function query($sql, $bind = [], $master = false, $pdo = false)
-    {
+    public function query($sql, $bind = [], $master = false, $pdo = false){
         $this->initConnect($master);
         if (!$this->linkID) {
             return false;
         }
-
         // 记录SQL语句
         $this->queryStr = $sql;
         if ($bind) {
@@ -339,17 +340,28 @@ abstract class Connection
         }
 
         Db::$queryTimes++;
+        for ($i=0; $i<2; $i++){
         try {
             // 调试开始
             $this->debug(true);
-
             // 释放前次的查询结果
             if (!empty($this->PDOStatement)) {
                 $this->free();
             }
             // 预处理
             if (empty($this->PDOStatement)) {
-                $this->PDOStatement = $this->linkID->prepare($sql);
+                try {
+                    @$this->PDOStatement = $this->linkID->prepare($sql);
+                } catch (PDOException $e) {
+                    $errorCode = isset($e->errorInfo[1]) ? $e->errorInfo[1] : 0;
+                    if ($errorCode == 2006 || $errorCode == 2013){
+                        $this->reconnect = true;
+                        echo "重新连接1\n";
+                        $this->initConnect($master);
+                        continue;
+                    }
+                    throw new MPDOException($e, $this->config, $sql);
+                }
             }
             // 是否为存储过程调用
             $procedure = in_array(strtolower(substr(trim($sql), 0, 4)), ['call', 'exec']);
@@ -369,17 +381,25 @@ abstract class Connection
             if ($this->isBreak($e)) {
                 return $this->close()->query($sql, $bind, $master, $pdo);
             }
+            $errorCode = isset($e->errorInfo[1]) ? $e->errorInfo[1] : 0;
+            if ($errorCode == 2006 || $errorCode == 2013){
+                $this->reconnect = true;
+                echo "重新连接2\n";
+                $this->initConnect($master);
+                continue;
+            }
             throw new MPDOException($e, $this->config, $this->getLastsql());
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             if ($this->isBreak($e)) {
                 return $this->close()->query($sql, $bind, $master, $pdo);
             }
             throw $e;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             if ($this->isBreak($e)) {
                 return $this->close()->query($sql, $bind, $master, $pdo);
             }
             throw $e;
+        }
         }
     }
 
@@ -438,12 +458,12 @@ abstract class Connection
                 return $this->close()->execute($sql, $bind);
             }
             throw new PDOException($e, $this->config, $this->getLastsql());
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             if ($this->isBreak($e)) {
                 return $this->close()->execute($sql, $bind);
             }
             throw $e;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             if ($this->isBreak($e)) {
                 return $this->close()->execute($sql, $bind);
             }
@@ -600,10 +620,10 @@ abstract class Connection
             }
             $this->commit();
             return $result;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->rollback();
             throw $e;
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->rollback();
             throw $e;
         }
@@ -637,12 +657,12 @@ abstract class Connection
                 return $this->close()->startTrans();
             }
             throw $e;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             if ($this->isBreak($e)) {
                 return $this->close()->startTrans();
             }
             throw $e;
-        } catch (Error $e) {
+        } catch (\Error $e) {
             if ($this->isBreak($e)) {
                 return $this->close()->startTrans();
             }
@@ -737,7 +757,7 @@ abstract class Connection
             }
             // 提交事务
             $this->commit();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->rollback();
             throw $e;
         }
@@ -938,9 +958,9 @@ abstract class Connection
             }
         } else {
             // 未注册监听则记录到日志中
-        	file_put_contents('db.log','[ SQL ] ' . $sql . ' [ RunTime:' . number_format(microtime(true) - $runtime, 6). "s ]\n\n",FILE_APPEND);
+        	Log::record('[ SQL ] ' . $sql . ' [ RunTime:' . number_format(microtime(true) - $runtime, 6). "s ]");
             if (!empty($explain)) {
-                file_put_contents('db.log','[ EXPLAIN : ' . var_export($explain, true) . " ]\n\n",FILE_APPEND);
+                Log::record('[ EXPLAIN : ' . var_export($explain, true) . " ]");
             }
         }
     }
@@ -951,22 +971,21 @@ abstract class Connection
      * @param boolean $master 是否主服务器
      * @return void
      */
-    protected function initConnect($master = true)
-    {
+    protected function initConnect($master = true){
         if (!empty($this->config['deploy'])) {
             // 采用分布式数据库
             if ($master || $this->transTimes) {
-                if (!$this->linkWrite) {
+                if (!$this->linkWrite) { // 连接写服务器
                     $this->linkWrite = $this->multiConnect(true);
                 }
                 $this->linkID = $this->linkWrite;
             } else {
-                if (!$this->linkRead) {
+                if (!$this->linkRead) { // 连接读服务器
                     $this->linkRead = $this->multiConnect(false);
                 }
                 $this->linkID = $this->linkRead;
             }
-        } elseif (!$this->linkID) {
+        } elseif (!$this->linkID || $this->reconnect == true) {
             // 默认单数据库
             $this->linkID = $this->connect();
         }

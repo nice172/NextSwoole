@@ -5,7 +5,7 @@ class Db2 {
     
     private static $instance = null;
     
-    public static $MySqlPool = [];
+    public static $MySqlPool = null;
     
     private function __construct($linkId=null){
         $this->connect($linkId);
@@ -22,14 +22,14 @@ class Db2 {
     }
     
     public function connect($linkId=null){
-        $mysqli = mysqli_connect('localhost','root','123456','weili');
+        $mysqli = mysqli_connect('localhost','root','123456','weili_shenzhen');
         if (mysqli_connect_error()){
             return false;
         }
         if ($linkId !== null){
-            self::$MySqlPool[$linkId] = $mysqli;
+            self::$MySqlPool = $mysqli;
         }else{
-            self::$MySqlPool[] = $mysqli;
+            self::$MySqlPool = $mysqli;
         }
         return true;
     }

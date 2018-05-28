@@ -2,13 +2,15 @@
 
 namespace system\model;
 
+use system\db\Query;
+
 /**
  * Class Relation
- * @package think\model
+ * @package system\model
  *
  * @mixin Query
  */
-abstract class Relation
+abstract class BaseRelation
 {
     // 父模型对象
     protected $parent;
@@ -119,8 +121,7 @@ abstract class Relation
      * @access protected
      * @return void
      */
-    protected function baseQuery()
-    {}
+    protected function baseQuery(){}
 
     public function __call($method, $args)
     {
@@ -136,7 +137,7 @@ abstract class Relation
                 return $result;
             }
         } else {
-            throw new Exception('method not exists:' . __CLASS__ . '->' . $method);
+            throw new \Exception('method not exists:' . __CLASS__ . '->' . $method);
         }
     }
 }

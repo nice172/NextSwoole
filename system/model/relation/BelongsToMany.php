@@ -1,6 +1,12 @@
 <?php
 namespace system\model\relation;
-class BelongsToMany extends Relation
+
+use system\Loader;
+use system\Model;
+use system\model\BaseRelation;
+use system\model\Pivot;
+
+class BelongsToMany extends BaseRelation
 {
     // 中间表表名
     protected $middle;
@@ -33,7 +39,7 @@ class BelongsToMany extends Relation
         $this->query = (new $model)->db();
         $this->pivot = $this->newPivot();
 
-        if ('think\model\Pivot' == get_class($this->pivot)) {
+        if ('system\model\Pivot' == get_class($this->pivot)) {
             $this->pivot->name($this->middle);
         }
     }
@@ -57,12 +63,12 @@ class BelongsToMany extends Relation
      */
     protected function newPivot($data = [])
     {
-        $class = $this->pivotName ?: '\\think\\model\\Pivot';
+        $class = $this->pivotName ?: '\\system\\model\\Pivot';
         $pivot = new $class($data, $this->parent, $this->middle);
         if ($pivot instanceof Pivot) {
             return $pivot;
         } else {
-            throw new Exception('pivot model must extends: \think\model\Pivot');
+            throw new \Exception('pivot model must extends: \system\model\Pivot');
         }
     }
 
@@ -105,7 +111,7 @@ class BelongsToMany extends Relation
      * 延迟获取关联数据
      * @param string   $subRelation 子关联名
      * @param \Closure $closure     闭包查询条件
-     * @return false|\PDOStatement|string|\think\Collection
+     * @return false|\PDOStatement|string|\system\Collection
      */
     public function getRelation($subRelation = '', $closure = null)
     {
@@ -203,7 +209,7 @@ class BelongsToMany extends Relation
      */
     public function hasWhere($where = [], $fields = null)
     {
-        throw new Exception('relation not support: hasWhere');
+        throw new \Exception('relation not support: hasWhere');
     }
 
     /**
@@ -460,7 +466,7 @@ class BelongsToMany extends Relation
             }
             return $result;
         } else {
-            throw new Exception('miss relation data');
+            throw new \Exception('miss relation data');
         }
     }
 

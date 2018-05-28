@@ -1,5 +1,9 @@
 <?php
 namespace system\model\relation;
+
+use system\Loader;
+use system\Model;
+
 class HasOne extends OneToOne
 {
     /**

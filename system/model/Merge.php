@@ -2,6 +2,10 @@
 
 namespace system\model;
 
+use system\Db;
+use system\Model;
+use system\db\Query;
+
 class Merge extends Model
 {
 
@@ -30,7 +34,7 @@ class Merge extends Model
      * @param mixed        $data  主键值或者查询条件（闭包）
      * @param string|array $with  关联预查询
      * @param bool         $cache 是否缓存
-     * @return \think\Model
+     * @return \system\Model
      */
     public static function get($data = null, $with = [], $cache = false)
     {
@@ -42,8 +46,8 @@ class Merge extends Model
     /**
      * 附加查询表达式
      * @access protected
-     * @param \think\db\Query $query 查询对象
-     * @return \think\db\Query
+     * @param \system\db\Query $query 查询对象
+     * @return \system\db\Query
      */
     protected static function attachQuery($query)
     {
@@ -65,7 +69,7 @@ class Merge extends Model
     /**
      * 获取关联模型的字段 并解决混淆
      * @access protected
-     * @param \think\db\Query $query  查询对象
+     * @param \system\db\Query $query  查询对象
      * @param string          $name   模型名称
      * @param string          $table  关联表名称
      * @param array           $map    字段映射

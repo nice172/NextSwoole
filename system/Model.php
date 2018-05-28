@@ -1,6 +1,16 @@
 <?php
 namespace system;
 use system\model\ModelCollection;
+use system\model\Relation;
+use system\db\Query;
+use system\model\relation\HasOne;
+use system\model\relation\BelongsTo;
+use system\model\relation\HasMany;
+use system\model\relation\HasManyThrough;
+use system\model\relation\BelongsToMany;
+use system\model\relation\MorphMany;
+use system\model\relation\MorphOne;
+use system\model\relation\MorphTo;
 
 /**
  * Class Model
@@ -541,7 +551,7 @@ abstract class Model implements \JsonSerializable, \ArrayAccess
         try {
             $notFound = false;
             $value    = $this->getData($name);
-        } catch (InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException $e) {
             $notFound = true;
             $value    = null;
         }
@@ -652,12 +662,12 @@ abstract class Model implements \JsonSerializable, \ArrayAccess
                 $value = empty($value) ? [] : json_decode($value, true);
                 break;
             case 'object':
-                $value = empty($value) ? new stdClass() : json_decode($value);
+                $value = empty($value) ? new \stdClass() : json_decode($value);
                 break;
             case 'serialize':
                 try {
                     $value = unserialize($value);
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     $value = null;
                 }
                 break;
@@ -2185,7 +2195,7 @@ abstract class Model implements \JsonSerializable, \ArrayAccess
                 $this->getAttr($name);
                 return true;
             }
-        } catch (InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException $e) {
             return false;
         }
 

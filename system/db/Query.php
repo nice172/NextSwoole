@@ -1,6 +1,8 @@
 <?php
 namespace system\db;
+use system\Db;
 use system\Loader;
+use Exception;
 use PDO;
 class Query
 {

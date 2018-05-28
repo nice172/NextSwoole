@@ -40,11 +40,11 @@ class Cache{
 
         if (true === $name || !isset(self::$instance[$name])) {
             $class = false === strpos($type, '\\') ?
-            '\\think\\cache\\driver\\' . ucwords($type) :
+            '\\system\\cache\\driver\\' . ucwords($type) :
             $type;
 
             // 记录初始化信息
-            App::$debug && Log::record('[ CACHE ] INIT ' . $type, 'info');
+            APP_DEBUG && \system\Log::record('[ CACHE ] INIT ' . $type, 'info');
 
             if (true === $name) {
                 return new $class($options);

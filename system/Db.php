@@ -77,7 +77,7 @@ class Db
 
             // 记录初始化信息
             if (APP_DEBUG) {
-                file_put_contents('db.log','[ DB ] INIT ' . $options['type']."\n\n", FILE_APPEND);
+                Log::record('[ DB ] INIT ' . $options['type']);
             }
             if (true === $name) {
                 $name = md5(serialize($config));

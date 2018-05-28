@@ -54,7 +54,7 @@ class Base {
 	}
 	
 	public function __destruct(){
-	    echo 'response null';
+	    //echo 'response null';
 	    $this->request = null;
 	    $this->response = null;
 	}

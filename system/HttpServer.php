@@ -98,7 +98,7 @@ class HttpServer extends SwooleBase {
         $this->server->on('request', function(\swoole_http_request $request, \swoole_http_response $response){
            if ($request->server['path_info'] == '/favicon.ico') {
                $response->end();return;
-           }
+           }           
            $request = new Request($request);
            $controller = $request->parseRoute();
            $controllerName = $controller['controllerName'];
@@ -114,6 +114,7 @@ class HttpServer extends SwooleBase {
                    $this->objectPool[$controllerName] = $controllerInstance;
                }
            }
+           
            if ($this->fileStatus == true){
                $methodName = $controller['methodName'];
                if (method_exists($controllerInstance, $methodName)){
@@ -170,6 +171,7 @@ class HttpServer extends SwooleBase {
     
     private function setServerConfig(){
         $this->server->set([
+            'reactor_num' => self::$conifg['server']['reactor_num'],
             'worker_num' => self::$conifg['server']['worker_num'],
             'max_request' => self::$conifg['server']['max_request'],
             'task_worker_num' => self::$conifg['server']['task_worker_num'],

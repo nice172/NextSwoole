@@ -1,5 +1,8 @@
 <?php
 namespace system\db\connector;
+
+use PDO;
+use system\db\Connection;
 /**
  * Sqlsrv数据库驱动
  */
@@ -11,7 +14,7 @@ class Sqlsrv extends Connection
         PDO::ATTR_ERRMODE           => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_STRINGIFY_FETCHES => false,
     ];
-    protected $builder = '\\think\\db\\builder\\Sqlsrv';
+    protected $builder = '\\system\\db\\builder\\Sqlsrv';
     /**
      * 解析pdo连接的dsn信息
      * @access protected

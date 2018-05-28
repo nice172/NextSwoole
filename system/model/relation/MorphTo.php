@@ -1,6 +1,11 @@
 <?php
 namespace system\model\relation;
-class MorphTo extends Relation
+
+use system\Loader;
+use system\Model;
+use system\model\BaseRelation;
+
+class MorphTo extends BaseRelation
 {
     // 多态字段
     protected $morphKey;
@@ -84,7 +89,7 @@ class MorphTo extends Relation
      */
     public function hasWhere($where = [], $fields = null)
     {
-        throw new Exception('relation not support: hasWhere');
+        throw new \Exception('relation not support: hasWhere');
     }
 
     /**
@@ -168,7 +173,7 @@ class MorphTo extends Relation
                     if ($key == $result->$morphType) {
                         // 关联模型
                         if (!isset($data[$result->$morphKey])) {
-                            throw new Exception('relation data not exists :' . $this->model);
+                            throw new \Exception('relation data not exists :' . $this->model);
                         } else {
                             $relationModel = $data[$result->$morphKey];
                             $relationModel->setParent(clone $result);

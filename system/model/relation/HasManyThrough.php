@@ -1,6 +1,12 @@
 <?php
 namespace system\model\relation;
-class HasManyThrough extends Relation
+
+use system\Loader;
+use system\Model;
+use system\model\BaseRelation;
+
+
+class HasManyThrough extends BaseRelation
 {
     // 中间关联表外键
     protected $throughKey;
@@ -32,7 +38,7 @@ class HasManyThrough extends Relation
      * 延迟获取关联数据
      * @param string   $subRelation 子关联名
      * @param \Closure $closure     闭包查询条件
-     * @return false|\PDOStatement|string|\think\Collection
+     * @return false|\PDOStatement|string|\system\Collection
      */
     public function getRelation($subRelation = '', $closure = null)
     {
@@ -66,7 +72,7 @@ class HasManyThrough extends Relation
      */
     public function hasWhere($where = [], $fields = null)
     {
-        throw new Exception('relation not support: hasWhere');
+        throw new \Exception('relation not support: hasWhere');
     }
 
     /**

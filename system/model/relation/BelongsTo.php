@@ -2,6 +2,9 @@
 
 namespace system\model\relation;
 
+use system\Loader;
+use system\Model;
+
 class BelongsTo extends OneToOne
 {
     /**

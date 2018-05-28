@@ -1,6 +1,7 @@
 <?php
 namespace system\db\builder;
 use system\db\AdapterBuilder;
+use system\db\Expression;
 /**
  * Sqlsrv数据库驱动
  */

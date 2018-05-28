@@ -2,6 +2,8 @@
 
 namespace system\model;
 
+use system\Model;
+
 class Pivot extends Model
 {
 
