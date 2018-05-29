@@ -47,6 +47,7 @@ class Loader {
         $namespacePath = self::$vendorMap[$namespace]; // 文件基目录
         $className = str_replace('\\', DIRECTORY_SEPARATOR, $className);
         $filePath = substr($className, strlen($namespace)).'.php'; // 文件相对路径
+        echo str_replace('\\', DIRECTORY_SEPARATOR, $namespacePath.$filePath)."\n\n";
         return str_replace('\\', DIRECTORY_SEPARATOR, $namespacePath.$filePath); // 文件标准路径
     }
     

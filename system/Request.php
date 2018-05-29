@@ -29,7 +29,7 @@ class Request {
         
        // new \appliaction\home\controller\Index($response);
         
-        $controllerName = '\application\\'.$default_module.'\controller\\'.$default_controller;
+        $controllerName = '\application\\'.$default_module.'\controller\\'.ucfirst($default_controller).'Controller';
         $methodName = 'init';
         if (isset($extension['extension'])){
             return ['moduleName' => $default_module,
@@ -38,14 +38,14 @@ class Request {
         if (count($pathinfo) >= 3){
             $moduleName = trim($pathinfo[0]); //获取当前模块
             if (isset($pathinfo[1]) && !empty($pathinfo[1])){
-                $controllerName = '\application\\'.$default_module.'\controller\\'.ucfirst($pathinfo[1]);
+                $controllerName = '\application\\'.$default_module.'\controller\\'.ucfirst($pathinfo[1]).'Controller';
             }
             if (isset($pathinfo[2]) && !empty($pathinfo[2])){
                 $methodName = $pathinfo[1];
             }
         }else{
             if (isset($pathinfo[0]) && !empty($pathinfo[0])){
-                $controllerName = '\application\\'.$default_module.'\controller\\'.ucfirst($pathinfo[0]);
+                $controllerName = '\application\\'.$default_module.'\controller\\'.ucfirst($pathinfo[0]).'Controller';
             }
             if (isset($pathinfo[1]) && !empty($pathinfo[1])){
                 $methodName = $pathinfo[1];

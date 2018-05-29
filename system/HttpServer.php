@@ -16,10 +16,7 @@ class HttpServer extends SwooleBase {
     
     private $server = null;
     private static $instance = null;
-    private $mysqlPool = null;
-    private $objectPool = [];
-    private $redisPool = [];
-    private $fileStatus = true;
+    private $runStatus = true;
     /**
      * * onStart * onShutdown * onWorkerStart * onWorkerStop * onTimer * onConnect * onReceive
      * * onClose * onTask * onFinish * onPipeMessage * onWorkerError * onManagerStart
@@ -42,7 +39,6 @@ class HttpServer extends SwooleBase {
         $this->onManagerStart();
         $this->onManagerStop();
         $this->onClose();
-        $this->init();
     }
     
     private function __clone(){}
@@ -64,18 +60,13 @@ class HttpServer extends SwooleBase {
     private function onWorkerStart(){
         $this->server->on('WorkerStart', function(\swoole_http_server $server, $worker_id){
             swoole_set_process_name('ns_worker');
+            $this->init();
         });
     }
     
     private function init(){
         \system\Loader::addNamespace();
         spl_autoload_register('\system\Loader::autoload');
-        $this->mysqlPool = new \SplQueue();
-        //if ($this->mysqlPool->count() <= 0){
-        //    for ($i=0; $i < self::$conifg['server']['server_num']; $i++){
-        //        $this->mysqlPool->enqueue(Db::getInstance());
-        //    }
-        //}
         define('APP_DEBUG', true);
     }
     
@@ -98,24 +89,33 @@ class HttpServer extends SwooleBase {
         $this->server->on('request', function(\swoole_http_request $request, \swoole_http_response $response){
            if ($request->server['path_info'] == '/favicon.ico') {
                $response->end();return;
-           }           
+           }
+           // cli模式
+           // 第一个请求$db是空,第二个请求执行完$db不会清空，已经常驻内存，需要手动清空
+           static $db = null;
+           if (is_null($db)){
+               // 实例化了db对象
+               $db = Db2::getInstance();
+           }else{
+               // 第二个请求$db不是空了
+               print_r($db);
+           }
+           
            $request = new Request($request);
            $controller = $request->parseRoute();
            $controllerName = $controller['controllerName'];
-           if (isset($this->objectPool[$controllerName]) && is_object($this->objectPool[$controllerName])){
-               $controllerInstance = $this->objectPool[$controllerName];
-               $controllerInstance->setResponse($response);
-           }else{
-               \system\Loader::bindModule($controller['moduleName']);
-               \system\Loader::addNamespace();
-               $this->fileStatus = file_exists(ROOT_PATH.str_replace('\\', '/', $controllerName).'.php');
-               if ($this->fileStatus == true){
+           \system\Loader::bindModule($controller['moduleName']);
+           \system\Loader::addNamespace();
+           $this->runStatus = file_exists(ROOT_PATH.str_replace('\\', '/', $controllerName).'.php');
+           if ($this->runStatus == true){
+               if (class_exists($controllerName)){
                    $controllerInstance = new $controllerName($response);
                    $this->objectPool[$controllerName] = $controllerInstance;
+               }else{
+                   $this->runStatus = false;
                }
            }
-           
-           if ($this->fileStatus == true){
+           if ($this->runStatus == true){
                $methodName = $controller['methodName'];
                if (method_exists($controllerInstance, $methodName)){
                    $controllerInstance->setMysqlPool($mysql=[]);
@@ -123,7 +123,7 @@ class HttpServer extends SwooleBase {
                    return;
                }
            }
-           $this->fileStatus = true;
+           $this->runStatus = true;
            $response->status(404);
            $response->end('<h2>404 NOT FOUND...</h2>');
         });

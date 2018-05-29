@@ -276,6 +276,7 @@ abstract class Connection
                 if ($config['debug']) {
                     $startTime = microtime(true);
                 }
+                echo "连接MYSQL数据库\n\n";
                 $this->links[$linkNum] = new PDO($config['dsn'], $config['username'], $config['password'], $params);
                 if ($config['debug']) {
                     // 记录数据库连接信息

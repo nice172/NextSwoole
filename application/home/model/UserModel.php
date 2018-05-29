@@ -2,7 +2,7 @@
 namespace application\home\model;
 use system\Model;
 
-class User extends Model{
+class UserModel extends Model{
 	
 	protected $table = 'wl_cosp_goods_info';
 	

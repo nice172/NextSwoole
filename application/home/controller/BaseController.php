@@ -1,7 +1,7 @@
 <?php
 namespace application\home\controller;
 
-class Base {
+class BaseController {
 	
 	protected $request;
 	protected $response;

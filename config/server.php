@@ -1,9 +1,9 @@
 <?php
 $config['server']['host'] = '0.0.0.0';
 $config['server']['port'] = 9501;
-$config['server']['reactor_num'] = 8;
-$config['server']['worker_num'] = 8;
-$config['server']['task_worker_num'] = 8;
+$config['server']['reactor_num'] = 1;
+$config['server']['worker_num'] = 1;
+$config['server']['task_worker_num'] = 1;
 $config['server']['max_request'] = 10000;
 $config['server']['daemonize'] = 0;
 

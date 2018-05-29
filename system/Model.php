@@ -473,7 +473,7 @@ abstract class Model implements \JsonSerializable, \ArrayAccess
         if (false !== strpos($format, '\\')) {
             $time = new $format($time);
         } elseif (!$timestamp && false !== $format) {
-            $time = date($format, $time);
+            $time = date($format, intval($time));
         }
         return $time;
     }
