@@ -10,10 +10,7 @@ class BaseController {
 	protected static $config = [];
 	protected static $mysqlPool = null;
 	
-	public function __construct(){
-	    
-	    $this->response = Response::getInstance()->getResponse();
-	    
+	public function __construct(){	    
 	    if (method_exists($this, '_initialize')){
 	    	$this->_initialize();
 	    }
@@ -21,11 +18,16 @@ class BaseController {
 
 	protected function _initialize(){}
 	
+	public function service(\swoole_http_server $server, \swoole_http_request $request, \swoole_http_response $response, $route){
+		$this->request = $request;
+		$this->response = $response;
+		$methodName = $route['methodName'];
+		$this->$methodName();
+	}
+	
 	public function init(){
 		$this->response->end('easyswoole');
 	}
-	
-	
 	
 	public function setResponse($response){
 	    $this->response = $response;

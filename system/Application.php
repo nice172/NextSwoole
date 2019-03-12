@@ -92,7 +92,7 @@ class Application {
         }
         $method = $route['methodName'];
         if (isset($this->objectPool[$controllerName]) && method_exists($this->objectPool[$controllerName], $method)){
-            $this->objectPool[$controllerName]->$method();
+            $this->objectPool[$controllerName]->service($this->server, $request, $response, $route);
             return;
         }
         $response->status(404);
